@@ -1,0 +1,165 @@
+1. Cloud Provider Details
+
+Cloud Provider: Microsoft Azure
+Subscription: Azure subscription 1
+Region Used: Central India
+
+2. VM Configuration
+
+Virtual Machine Name: kali-lab-vm
+Operating System: Ubuntu Server 22.04 LTS
+VM Size: Standard B1s
+
+Why It Is Free-Tier Eligible
+
+Standard B1s is a low-cost VM suitable for free trial credits.
+
+Covered under available Azure student/free credits.
+
+No high-compute or premium disk selected.
+
+3. Authentication Method
+
+Authentication Type: SSH Public Key
+
+Steps performed:
+
+Generated new SSH key pair during VM creation.
+
+Downloaded private key (.pem file).
+
+On Kali Linux:
+
+chmod 400 azure.pem
+
+Used key-based SSH login:
+
+ssh -i azure.pem azureuser@20.193.142.196
+
+No passwords were used or shared.
+
+4. Network / Security Rules Configured
+
+Inbound rules configured in Network Security Group:
+
+SSH
+Protocol: TCP
+Port: 22
+Source: My IP
+
+HTTP
+Protocol: TCP
+Port: 80
+Source: Any
+
+ICMP (for Ping)
+Protocol: ICMPv4
+Source: Any
+Priority: 310
+
+ICMP rule was added after initial ping test to enable successful ping.
+
+5. VM Public IP
+
+VM Public IP: 20.193.142.196
+
+TASK EXECUTION
+6. Screenshot #1 – Ping From Kali
+
+From Kali Linux:
+
+ping -c 4 20.193.142.196
+
+Result: Successful replies received after ICMP rule was added.
+
+7. Screenshot #2 – SSH + ip a
+
+Logged into VM:
+
+ssh -i azure.pem azureuser@20.193.142.196
+
+Inside VM:
+
+ip a
+
+Result: Displayed loopback and eth0 interface with private IP 172.x.x.x.
+
+8. Screenshot #3 – Ping My Public IP From VM
+
+Inside VM:
+
+curl ifconfig.me
+
+Output:
+20.193.142.196
+
+Then:
+
+ping -c 4 20.193.142.196
+
+Result: Ping successful.
+
+Observation:
+The VM was able to ping its own public IP successfully due to Azure networking configuration allowing this routing.
+
+9. Hosting Webpage on Port 80
+
+Installed Apache server:
+
+sudo apt update
+sudo apt install apache2 -y
+sudo systemctl enable --now apache2
+
+Confirmed Apache running using:
+
+sudo systemctl status apache2
+
+Replaced default webpage:
+
+Edited:
+
+/var/www/html/index.html
+
+Added dictionary mini project HTML and JavaScript code.
+
+Verified HTTP port 80 inbound rule allowed access.
+
+Accessed from local browser:
+
+http://20.193.142.196
+
+Result: Dictionary application loaded successfully.
+
+
+10. Mini Project Description
+
+Webpage contains:
+
+Word input field
+
+Button to search meaning
+
+Fetches meaning using free API:
+https://api.dictionaryapi.dev/
+
+Displays part of speech and definition dynamically
+
+11. Shutdown and Deletion
+
+Shutdown performed:
+
+sudo shutdown now
+
+Azure Portal actions:
+
+Deleted Virtual Machine
+
+Deleted associated Public IP
+
+Deleted Network Interface
+
+Deleted Disk
+
+Deleted Resource Group: vm-lab-rg
+
+Verified only default Azure system resource group remained.
